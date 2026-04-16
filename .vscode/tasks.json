@@ -1,0 +1,18 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "mvn clean package",
+      "type": "shell",
+      "command": "mvn clean package",
+      "options": {
+        "cwd": "D:\\DAM\\DAM_2526\\2\\AD\\U06\\prac\\Tarea\\tarea06v1\\tarea061"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}
