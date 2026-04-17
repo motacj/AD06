@@ -15,12 +15,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "FindAllPasajeController", urlPatterns = { "/viewallpasajes" })
-public class FindAllPasajeController extends HttpServlet {
+
+
+@WebServlet(name = "PasajeforIdentificador", urlPatterns = { "/findpasaje" })
+public class PasajeforIdentificador extends HttpServlet {
     // Logger para registrar mensajes de informacion, advertencia y error
     // relacionados con la conexion a MongoDB. Se utiliza la biblioteca SLF4J para
     // el registro de mensajes.
-    private static final Logger logger = LoggerFactory.getLogger(FindAllPasajeController.class);
+    private static final Logger logger = LoggerFactory.getLogger(PasajeforIdentificador.class);
 
     // @Inject
     private MongoBean mongoBean;
@@ -46,49 +48,48 @@ public class FindAllPasajeController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
 
             PasajeDAO pasajeDAO = new PasajeDAO(conexionMongoDb.getDatosbase());
-            List<Document> pasajes = pasajeDAO.obtenerTodosLosPasajes();
+            String identificador = request.getParameter("identificador");
+            List<Document> pasajes = pasajeDAO.obtenerDastosDelPasaje(identificador);
 
             out.println("<!DOCTYPE html>");
             out.println("<html lang='es'>");
             out.println("<head>");
             out.println("<meta charset='UTF-8'>");
-            out.println("<title>Listado de pasajes</title>");
+            out.println("<title>Listado de pasajeros por identificador</title>");
             out.println("<link rel='stylesheet' href='" + request.getContextPath() + "/css/viewallvuelo.css'>");
             out.println("</head>");
             out.println("<body>");
             out.println("<div class='contenedor'>");
 
-            out.println("<button type=\"button\" onclick=\"location.href='" + request.getContextPath()
-                    + "/index'\">Volver</button>");
+            out.println("<button type=\"button\" onclick=\"location.href='" + request.getContextPath() + "/index'\">Volver</button>");
 
-            out.println("<h2 class='titulo'>Datos de los pasajes</h2>");
+            out.println("<h2 class='titulo'>Datos de los pasajeros</h2>");
             out.println("<table class='tabla-vuelos'>");
             out.println("<thead>");
             out.println("<tr>");
-            out.println("<th>Id pasaje</th>");
+            out.println("<th>Identificador</th>");
             out.println("<th>Código Pasajero</th>");
-            out.println("<th>Identificador del Vuelo</th>");
+            out.println("<th>Nombre Pasajero</th>");
+            out.println("<th>País Pasajero</th>");
             out.println("<th>Número de Asiento</th>");
             out.println("<th>Clase</th>");
             out.println("<th>PVP Final</th>");
-            out.println("<th colspan=\"2\">Editar</th>");
             out.println("</tr>");
             out.println("</thead>");
             out.println("<tbody>");
 
-            for (Document pasaje :pasajes) {
+            for(Document pasaje: pasajes){
                 out.println("<tr>");
-                out.println("<td>" + pasaje.getInteger("idpasaje") + "</td>");
-                out.println("<td>" + pasaje.getInteger("pasajerocod") + "</td>");
-                out.println("<td>" + pasaje.getString("identificador") + "</td>");
+                out.println("<td>" + pasaje.getInteger("identificador") + "</td>"); 
+                out.println("<td>" + pasaje.getInteger("codigo_pasajero") + "</td>");
+                out.println("<td>" + pasaje.getString("nombre_pasajero") + "</td>");
+                out.println("<td>" + pasaje.getString("pais_pasajero") + "</td>");
                 out.println("<td>" + pasaje.getInteger("numasiento") + "</td>");
                 out.println("<td>" + pasaje.getString("clase") + "</td>");
-                out.println("<td>" + pasaje.getDouble("pvp") + "</td>");
-                out.println("<td>" + "<button type=\"button\" style=\"margin-right: 8px;\" onclick=\"location.href='" + request.getContextPath() + "/index'\">Modificar</button>" + "</td>");
-                out.println("<td>" +"<button type=\"button\" onclick=\"location.href='" + request.getContextPath() + "/index'\">Borrar</button>" + "</td>");
+                out.println("<td>" + pasaje.getDouble("pvp_final") + "</td>");
                 out.println("</tr>");
             }
-
+            
             out.println("</tbody>");
             out.println("</table>");
             out.println("</div>");
@@ -99,7 +100,7 @@ public class FindAllPasajeController extends HttpServlet {
             logger.error("Error al procesar la solicitud en VueloController", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al procesar la solicitud");
         }
-
+        
     }
 
     @Override
@@ -111,3 +112,6 @@ public class FindAllPasajeController extends HttpServlet {
     }
 
 }
+
+
+

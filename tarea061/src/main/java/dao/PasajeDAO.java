@@ -150,6 +150,7 @@ public class PasajeDAO {
         }
     }
 
+
     public List<Document> obtenerDastosDelPasaje(String Identificador) {
 
         List<Document> resultados = new ArrayList<>();
@@ -224,13 +225,15 @@ public class PasajeDAO {
             }
 
             for (Document resultado : resultados) {
+                Number pvpNumber = resultado.get("pvp", Number.class);
+                double pvp = pvpNumber != null ? pvpNumber.doubleValue() : 0.0;
                 logger.info(
                         "Pasaje ID: " + resultado.getInteger("idpasaje") + ", Codigo Pasajero: "
                                 + resultado.getInteger("pasajerocod")
                                 + ", Identificador Vuelo: " + resultado.getString("identificador") + ", Numero Asiento: "
                                 + resultado.getInteger("numasiento")
                                 + ", Clase: " + resultado.getString("clase") + ", PVP: "
-                                + resultado.getDouble("pvp"));
+                                + pvp);
             }
 
             return resultados;
@@ -239,7 +242,7 @@ public class PasajeDAO {
             logger.error("Error al obtener los pasajes: " + e.getMessage());
             return null;
         }
-    }   
+    }
 
 }
 

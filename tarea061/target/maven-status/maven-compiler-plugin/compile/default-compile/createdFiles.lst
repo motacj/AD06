@@ -7,6 +7,7 @@ controlador\IndexController.class
 modelo\Aeropuerto.class
 controlador\FindAllPasajeController.class
 utiles\ConfigFile.class
+controlador\PasajeforIdentificador.class
 controlador\FindVueloController.class
 dao\VueloDAO.class
 modelo\Vuelo.class

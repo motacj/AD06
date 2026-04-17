@@ -64,6 +64,7 @@ public class App {
         Pasaje pasajeToActualziar = new Pasaje(1, 3, "V001", 27, "BUSINESS", 59.0);
 
         pasajeDAO.actualizarPasaje(pasajeToActualziar);
+        
 
         // lista los vuelos
         VueloDAO vueloDAO = new VueloDAO(connection.getDatosbase());
