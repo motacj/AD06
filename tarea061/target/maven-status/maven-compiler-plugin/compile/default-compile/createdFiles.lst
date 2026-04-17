@@ -1,5 +1,6 @@
 controlador\VueloController.class
 controlador\App.class
+controlador\ChangePasajeController.class
 modelo\Pasaje.class
 dao\AeropuertoDAO.class
 Bean\MongoBean.class
@@ -13,4 +14,5 @@ dao\VueloDAO.class
 modelo\Vuelo.class
 controlador\AeropuertoController.class
 dao\PasajeDAO.class
+dao\PasajeroDAO.class
 controlador\ConexionMongoDb.class

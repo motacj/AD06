@@ -133,13 +133,13 @@ public class PasajeDAO {
             if (result == null) {
                 logger.error("No existe el pasaje con id: {}", pasaje.getIdpasaje());
                 return;
-            }else {
+            } else {
 
-                Document datosActualizar = new Document(
-                    "numasiento", pasaje.getNumasiento())
-                    .append("clase", pasaje.getClase())
-                    .append("pvp", pasaje.getPvp());
-
+                Document datosActualizar = new Document("pasajerocod", pasaje.getPasajerocod())
+                        .append("identificador", pasaje.getIdentificador())
+                        .append("numasiento", pasaje.getNumasiento())
+                        .append("clase", pasaje.getClase())
+                        .append("pvp", pasaje.getPvp());
 
                 Document update = new Document("$set", datosActualizar);
                 this.collection.updateOne(query, update);
@@ -149,7 +149,6 @@ public class PasajeDAO {
             logger.error("Error al actualizar el pasaje: {}", e.getMessage());
         }
     }
-
 
     public List<Document> obtenerDastosDelPasaje(String Identificador) {
 
@@ -213,7 +212,6 @@ public class PasajeDAO {
             return null;
         }
 
-
     }
 
     public List<Document> obtenerTodosLosPasajes() {
@@ -230,7 +228,8 @@ public class PasajeDAO {
                 logger.info(
                         "Pasaje ID: " + resultado.getInteger("idpasaje") + ", Codigo Pasajero: "
                                 + resultado.getInteger("pasajerocod")
-                                + ", Identificador Vuelo: " + resultado.getString("identificador") + ", Numero Asiento: "
+                                + ", Identificador Vuelo: " + resultado.getString("identificador")
+                                + ", Numero Asiento: "
                                 + resultado.getInteger("numasiento")
                                 + ", Clase: " + resultado.getString("clase") + ", PVP: "
                                 + pvp);
@@ -244,5 +243,23 @@ public class PasajeDAO {
         }
     }
 
-}
+    public Document obtenerPasajePorId(int idpasaje) {
+        try {
+            Document query = new Document("idpasaje", idpasaje);
+            Document pasaje = collection.find(query).first();
 
+            if (pasaje == null) {
+                logger.warn("No existe ningún pasaje con id: {}", idpasaje);
+            } else {
+                logger.info("Pasaje encontrado con id: {}", idpasaje);
+            }
+
+            return pasaje;
+
+        } catch (MongoException e) {
+            logger.error("Error al obtener el pasaje por id: {}", e.getMessage());
+            return null;
+        }
+    }
+
+}

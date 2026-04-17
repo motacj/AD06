@@ -1,6 +1,7 @@
 D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\Bean\MongoBean.java
 D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\controlador\AeropuertoController.java
 D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\controlador\App.java
+D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\controlador\ChangePasajeController.java
 D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\controlador\ConexionMongoDb.java
 D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\controlador\FindAllPasajeController.java
 D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\controlador\FindVueloController.java
@@ -9,6 +10,7 @@ D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\controlador
 D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\controlador\VueloController.java
 D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\dao\AeropuertoDAO.java
 D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\dao\PasajeDAO.java
+D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\dao\PasajeroDAO.java
 D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\dao\VueloDAO.java
 D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\modelo\Aeropuerto.java
 D:\DAM\DAM_2526\2\AD\U06\prac\Tarea\tarea06v1\tarea061\src\main\java\modelo\Pasaje.java

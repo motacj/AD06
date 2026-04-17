@@ -46,6 +46,27 @@ public class FindAllPasajeController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
 
             PasajeDAO pasajeDAO = new PasajeDAO(conexionMongoDb.getDatosbase());
+            // Opcion de borrar un pasaje
+            String accion = request.getParameter("accion");
+            String idPasajeParam = request.getParameter("idpasaje");
+
+            if ("borrar".equalsIgnoreCase(accion) && idPasajeParam != null) {
+                try {
+                    int idpasaje = Integer.parseInt(idPasajeParam);
+
+                    pasajeDAO.borrarPasaje(idpasaje);
+
+                    response.sendRedirect(request.getContextPath() + "/viewallpasajes");
+                    return;
+
+                } catch (NumberFormatException e) {
+                    logger.error("El idpasaje no es válido: {}", idPasajeParam, e);
+                    response.sendRedirect(request.getContextPath() + "/viewallpasajes");
+                    return;
+                }
+            }
+
+            // Opcion de listar todos los pasajes
             List<Document> pasajes = pasajeDAO.obtenerTodosLosPasajes();
 
             out.println("<!DOCTYPE html>");
@@ -76,7 +97,7 @@ public class FindAllPasajeController extends HttpServlet {
             out.println("</thead>");
             out.println("<tbody>");
 
-            for (Document pasaje :pasajes) {
+            for (Document pasaje : pasajes) {
                 out.println("<tr>");
                 out.println("<td>" + pasaje.getInteger("idpasaje") + "</td>");
                 out.println("<td>" + pasaje.getInteger("pasajerocod") + "</td>");
@@ -84,8 +105,20 @@ public class FindAllPasajeController extends HttpServlet {
                 out.println("<td>" + pasaje.getInteger("numasiento") + "</td>");
                 out.println("<td>" + pasaje.getString("clase") + "</td>");
                 out.println("<td>" + pasaje.getDouble("pvp") + "</td>");
-                out.println("<td>" + "<button type=\"button\" style=\"margin-right: 8px;\" onclick=\"location.href='" + request.getContextPath() + "/index'\">Modificar</button>" + "</td>");
-                out.println("<td>" +"<button type=\"button\" onclick=\"location.href='" + request.getContextPath() + "/index'\">Borrar</button>" + "</td>");
+                out.println("<td>"
+                        + "<button type=\"button\" style=\"margin-right: 8px;\" onclick=\"location.href='"
+                        + request.getContextPath()
+                        + "/changePasaje?idpasaje="
+                        + pasaje.getInteger("idpasaje")
+                        + "'\">Modificar</button>"
+                        + "</td>");
+                out.println("<td>"
+                        + "<button type=\"button\" onclick=\"location.href='"
+                        + request.getContextPath()
+                        + "/viewallpasajes?accion=borrar&idpasaje="
+                        + pasaje.getInteger("idpasaje")
+                        + "'\">Borrar</button>"
+                        + "</td>");
                 out.println("</tr>");
             }
 
