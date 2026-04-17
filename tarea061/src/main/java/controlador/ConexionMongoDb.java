@@ -16,7 +16,17 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import utiles.ConfigFile;
-
+/**
+ * Yo soy la clase que se encarga de abrir, mantener y cerrar la conexión con MongoDB.
+ *
+ * Dicho de forma muy sencilla, yo soy la puerta de entrada a la base de datos.
+ *
+ * Primero leo la configuración,
+ * después construyo la conexión,
+ * y finalmente entrego a otras clases el acceso a la base de datos.
+ *
+ * Si yo fallo, los controllers y los DAO no pueden hacer su trabajo.
+ */
 public class ConexionMongoDb {
 
     // Logger para registrar mensajes de informacion, advertencia y error
@@ -41,8 +51,16 @@ public class ConexionMongoDb {
     private int maxIdleTime;
     private String appName;
 
-    // Constructor de la clase ConexionMongoDb, que recibe los parametros necesarios
-    // para construir la URI de conexion a MongoDB.
+    /**
+     * Aquí yo leo el archivo de configuración y construyo la URI de conexión.
+     *
+     * También cargo los parámetros del pool de conexiones,
+     * porque así la conexión queda preparada con los valores definidos
+     * en el archivo de propiedades.
+     *
+     * Si algo falla al leer la configuración,
+     * dejo constancia del error para evitar que otras clases trabajen con datos incompletos.
+     */
     public ConexionMongoDb() {
 
         // Inicializamos la variable properties como null, lo que indica que aun no se
@@ -82,12 +100,18 @@ public class ConexionMongoDb {
 
     }
 
-    // Metodo para crear la conexion a MongoDB. Intenta establecer la conexion
-    // utilizando la URI proporcionada en el constructor y realiza una prueba de
-    // ping para verificar que la conexion se ha establecido correctamente. Si la
-    // conexion es exitosa, se almacena el cliente de MongoDB en el atributo client
-    // y se devuelve true. Si ocurre un error durante la conexion, se captura la
-    // excepcion MongoException, se imprime un mensaje de error y se devuelve false.
+    /**
+     * Aquí yo intento abrir la conexión real con MongoDB.
+     *
+     * Lo hago usando la URI y la configuración que preparé antes.
+     * Además, realizo una prueba de ping para confirmar
+     * que la conexión funciona de verdad.
+     *
+     * Si todo sale bien, guardo el cliente MongoDB dentro de la clase
+     * para que luego se pueda reutilizar.
+     *
+     * @return true si la conexión se creó correctamente; false si ocurrió algún error.
+     */
     public boolean createConnect() {
 
         if (this.connectionString == null) {
@@ -138,7 +162,14 @@ public class ConexionMongoDb {
             return false;
         }
     }
-
+    /**
+     * Aquí yo muestro información general del cluster de MongoDB.
+     *
+     * Este método me sirve como comprobación técnica:
+     * no modifica datos ni construye pantallas,
+     * pero me ayuda a confirmar que la conexión está viva
+     * y a ver información del entorno al que estoy conectado.
+     */
     public void mostrarDatosCluster() {
 
         // Verificamos si la conexion a MongoDB se ha establecido correctamente antes de
@@ -169,7 +200,13 @@ public class ConexionMongoDb {
             logger.error("Error al obtener informacion del cluster MongoDB: " + e.getMessage());
         }
     }
-
+    /**
+     * Aquí yo muestro información básica de la base de datos conectada.
+     *
+     * Igual que el método del cluster, este no cambia datos.
+     * Su objetivo es ayudarme a comprobar
+     * que estoy apuntando a la base de datos correcta.
+     */
     public void mostrarDatosDatabase() {
 
         // Verificamos si la conexion a MongoDB se ha establecido correctamente antes de
@@ -201,7 +238,15 @@ public class ConexionMongoDb {
             logger.error("Error al obtener informacion de la base de datos MongoDB: " + e.getMessage());
         }
     }
-
+    /**
+     * Aquí yo devuelvo el objeto MongoDatabase que otras clases necesitan para trabajar.
+     *
+     * Este método es muy importante porque actúa como puente:
+     * los controllers y los DAO no crean la conexión por su cuenta,
+     * sino que me piden a mí la base de datos ya preparada.
+     *
+     * @return la base de datos MongoDB activa, o null si no existe conexión.
+     */
     public MongoDatabase getDatosbase() {
         if (this.client == null) {
 
@@ -211,7 +256,15 @@ public class ConexionMongoDb {
         }
         return this.client.getDatabase(this.connectionString.getDatabase());
     }
-
+    /**
+     * Aquí yo cierro la conexión con MongoDB cuando ya no se necesita.
+     *
+     * Esto ayuda a liberar recursos y dejar el sistema cerrado correctamente.
+     *
+     * Aunque parezca un paso pequeño, es importante
+     * porque una buena conexión no solo se abre bien,
+     * también se cierra bien.
+     */
     public void closeConnect() {
 
         if (this.client != null) {
@@ -222,7 +275,16 @@ public class ConexionMongoDb {
 
         }
     }
-
+    /**
+     * Aquí yo sería el punto para devolver una colección concreta de MongoDB.
+     *
+     * En la versión actual todavía no está implementado,
+     * así que por ahora solo deja claro que este hueco existe
+     * para una posible ampliación futura.
+     *
+     * @param string nombre de la colección solicitada.
+     * @return no devuelve nada útil todavía, porque el método no está implementado.
+     */
     public MongoCollection<Document> getCollection(String string) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getCollection'");

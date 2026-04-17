@@ -1,7 +1,12 @@
 package modelo;
 
 import org.bson.Document;
-
+/**
+ * Yo soy el modelo que representa un vuelo dentro de la aplicación.
+ *
+ * Reúno en un solo objeto la información principal de un vuelo,
+ * para que otras capas puedan trabajar con ella de manera ordenada.
+ */
 public class Vuelo {
 
     private String identificador;
@@ -10,10 +15,27 @@ public class Vuelo {
     private String tipovuelo;
     private String fechavuelo;
     private double descuento;
-
+    /**
+     * Aquí yo creo un vuelo a partir de un documento.
+     *
+     * En la versión actual este constructor está vacío,
+     * pero deja preparado el punto donde podría construirse el objeto
+     * directamente a partir de un Document de MongoDB.
+     *
+     * @param document documento desde el que se quiere construir el vuelo.
+     */
     public Vuelo(Document document) {
     }
-
+    /**
+    * Aquí yo creo un vuelo completo con todos sus datos principales.
+    *
+    * @param identificador identificador del vuelo.
+    * @param aeropuertoorigen código del aeropuerto de origen.
+    * @param aeropuertodestino código del aeropuerto de destino.
+    * @param tipovuelo tipo de vuelo.
+    * @param fechavuelo fecha del vuelo.
+    * @param descuento descuento aplicado al vuelo.
+    */
     public Vuelo(String identificador, String aeropuertoorigen, String aeropuertodestino, String tipovuelo,
             String fechavuelo, double descuento) {
         this.identificador = identificador;

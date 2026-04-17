@@ -19,7 +19,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import modelo.Pasaje;
 import modelo.Vuelo;
-
+/**
+ * Yo soy el controller encargado de modificar un pasaje que ya existe.
+ *
+ * Mi trabajo empieza cuando el usuario está viendo el listado de pasajes
+ * y pulsa el botón de modificar.
+ *
+ * En ese momento, la petición llega a mí con el id del pasaje.
+ * Yo busco ese registro, preparo la pantalla con los datos actuales
+ * y le devuelvo al usuario un formulario ya rellenado.
+ *
+ * Después, cuando el usuario cambia los datos y pulsa el botón de guardar,
+ * vuelvo a intervenir para recoger lo escrito en el request
+ * y mandarlo al DAO para actualizar la base de datos.
+ *
+ * Dicho de una manera muy simple, yo sigo este recorrido:
+ * listado HTML -> botón modificar -> Controller -> request -> formulario HTML
+ * -> botón guardar -> Controller -> DAO -> actualización final.
+ */
 @WebServlet(name = "ChangePasajeController", urlPatterns = { "/changePasaje" })
 public class ChangePasajeController extends HttpServlet {
 
@@ -27,7 +44,17 @@ public class ChangePasajeController extends HttpServlet {
 
     private MongoBean mongoBean;
     private ConexionMongoDb conexionMongoDb;
-
+    /**
+     * Aquí yo dejo preparada la conexión con MongoDB antes de atender peticiones.
+     *
+     * Lo hago al arrancar el servlet para no tener que crear la conexión cada vez
+     * que un usuario entra a modificar un pasaje.
+     *
+     * Si la conexión no existe, no puedo seguir, porque todo mi trabajo depende
+     * de poder leer y actualizar datos en la base de datos.
+     *
+     * @throws ServletException si no consigo dejar lista la conexión con MongoDB.
+     */
     @Override
     public void init() throws ServletException {
         logger.info("Inicializando ChangePasajeController");
@@ -38,7 +65,27 @@ public class ChangePasajeController extends HttpServlet {
             throw new ServletException("No se pudo establecer la conexión con MongoDB");
         }
     }
-
+    /**
+     * Aquí yo muestro el formulario de modificación de un pasaje.
+     *
+     * Este método se ejecuta cuando el usuario pulsa el botón "Modificar"
+     * desde el listado de pasajes.
+     *
+     * Paso a paso, lo que hago es:
+     * 1. Leo del request el id del pasaje que se quiere editar.
+     * 2. Busco ese pasaje en la base de datos.
+     * 3. Pido también los códigos de pasajeros y los vuelos disponibles.
+     * 4. Construyo el HTML del formulario con los datos actuales ya cargados.
+     * 5. Devuelvo esa pantalla al navegador.
+     *
+     * Yo aquí todavía no guardo cambios.
+     * En esta fase solo preparo la pantalla para que el usuario pueda editar.
+     *
+     * @param request contiene la petición enviada desde el navegador, incluido el id del pasaje.
+     * @param response me permite devolver la página HTML del formulario de modificación.
+     * @throws ServletException si ocurre un error interno del servlet.
+     * @throws IOException si ocurre un error al escribir la respuesta.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -204,7 +251,27 @@ public class ChangePasajeController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al procesar la solicitud");
         }
     }
-
+    /**
+     * Aquí yo proceso el formulario de modificación cuando el usuario pulsa "Guardar cambios".
+     *
+     * En este momento ya no estoy mostrando la pantalla,
+     * sino recogiendo lo que el usuario ha escrito.
+     *
+     * Lo que hago es:
+     * 1. Leo del request todos los campos del formulario.
+     * 2. Convierto a número los valores que han llegado como texto.
+     * 3. Creo un objeto Pasaje con los nuevos datos.
+     * 4. Llamo al DAO para actualizar el registro en MongoDB.
+     * 5. Redirijo al listado final de pasajes.
+     *
+     * Dicho de forma sencilla:
+     * formulario HTML -> botón guardar -> Controller -> request -> DAO -> actualización.
+     *
+     * @param request contiene los nuevos datos enviados desde el formulario.
+     * @param response permite redirigir al listado o devolver un error si algo falla.
+     * @throws ServletException si ocurre un error interno del servlet.
+     * @throws IOException si ocurre un error de entrada o salida.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

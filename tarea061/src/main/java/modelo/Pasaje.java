@@ -1,5 +1,13 @@
 package modelo;
-
+/**
+ * Yo soy el modelo que representa un pasaje dentro de la aplicación.
+ *
+ * Mi función es guardar en un solo objeto toda la información
+ * que identifica una reserva o asiento dentro de un vuelo.
+ *
+ * Gracias a mí, los controllers y los DAO pueden intercambiar datos
+ * de una manera más ordenada y más fácil de entender.
+ */
 public class Pasaje {
 
     private int idpasaje;
@@ -10,10 +18,26 @@ public class Pasaje {
     private double pvp;
 
 
-
+    /**
+     * Aquí yo creo un pasaje vacío.
+     *
+     * Este constructor me sirve cuando primero quiero crear el objeto
+     * y después rellenar sus campos poco a poco con setters.
+     */
     public Pasaje() {
     }
-
+    /**
+     * Aquí yo creo un pasaje nuevo sin id, pensado normalmente para inserciones.
+     *
+     * El id puede generarse más tarde en el DAO
+     * justo antes de guardar el registro en MongoDB.
+     *
+     * @param pasajerocod código del pasajero.
+     * @param identificador identificador del vuelo.
+     * @param numasiento número de asiento.
+     * @param clase clase del pasaje.
+     * @param pvp precio del pasaje.
+     */
     public Pasaje(int pasajerocod, String identificador, int numasiento, String clase, double pvp) {
         this.pasajerocod = pasajerocod;
         this.identificador = identificador;
@@ -22,7 +46,19 @@ public class Pasaje {
         this.pvp = pvp;
     }
   
-
+    /**
+     * Aquí yo creo un pasaje completo con todos sus datos, incluido el id.
+     *
+     * Este constructor resulta útil cuando ya conozco el identificador del registro,
+     * por ejemplo al actualizar o reconstruir un pasaje existente.
+     *
+     * @param idpasaje identificador del pasaje.
+     * @param pasajerocod código del pasajero.
+     * @param identificador identificador del vuelo.
+     * @param numasiento número de asiento.
+     * @param clase clase del pasaje.
+     * @param pvp precio del pasaje.
+     */
     public Pasaje(int idpasaje, int pasajerocod, String identificador, int numasiento, String clase, double pvp) {
         this.idpasaje = idpasaje;
         this.pasajerocod = pasajerocod;

@@ -15,7 +15,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
+/**
+ * Yo soy el controller que muestra el listado general de vuelos.
+ *
+ * Mi misión es consultar todos los vuelos disponibles,
+ * pedir también sus datos relacionados de aeropuerto
+ * y construir la pantalla HTML que el usuario ve en el navegador.
+ *
+ * Esta pantalla suele ser una de las más importantes,
+ * porque desde ella el usuario entiende qué vuelos existen
+ * y desde ahí puede seguir navegando por la aplicación.
+ */
 @WebServlet(name = "VueloController", urlPatterns = { "/viewallvuelos" })
 public class VueloController extends HttpServlet {
     // Logger para registrar mensajes de informacion, advertencia y error
@@ -23,10 +33,16 @@ public class VueloController extends HttpServlet {
     // el registro de mensajes.
     private static final Logger logger = LoggerFactory.getLogger(VueloController.class);
 
-    // @Inject
     private MongoBean mongoBean;
     private ConexionMongoDb conexionMongoDb;
-
+    /**
+     * Aquí yo preparo la conexión con MongoDB antes de listar los vuelos.
+     *
+     * Necesito tener esa conexión lista para poder pedir al DAO
+     * todos los datos que después convertiré en una tabla HTML.
+     *
+     * @throws ServletException si no consigo disponer de una conexión válida.
+     */
     @Override
     public void init() throws ServletException {
         logger.info("Inicializando VueloController");
@@ -37,7 +53,23 @@ public class VueloController extends HttpServlet {
             throw new ServletException("No se pudo establecer la conexión con MongoDB");
         }
     }
-
+    /**
+     * Aquí yo construyo la pantalla del listado de vuelos.
+     *
+     * Lo hago así:
+     * 1. Pido al DAO la lista de vuelos junto con sus datos relacionados.
+     * 2. Recorro esos resultados.
+     * 3. Genero el HTML de la tabla.
+     * 4. Devuelvo la página al navegador.
+     *
+     * Yo actúo como puente entre la base de datos y la pantalla.
+     * El DAO me da los datos y yo los convierto en una vista comprensible.
+     *
+     * @param request contiene la petición que llega desde el navegador.
+     * @param response me permite escribir la página HTML del listado de vuelos.
+     * @throws ServletException si ocurre un error interno del servlet.
+     * @throws IOException si ocurre un error de entrada o salida.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -93,14 +125,6 @@ public class VueloController extends HttpServlet {
             logger.error("Error al procesar la solicitud en VueloController", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al procesar la solicitud");
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        response.setContentType("text/html;charset=UTF-8");
-        response.getWriter().println("POST /personas funcionando");
     }
 
 }

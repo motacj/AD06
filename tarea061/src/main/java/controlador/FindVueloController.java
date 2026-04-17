@@ -13,9 +13,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-
-
+/**
+ * Yo soy el controller que busca un vuelo concreto por su identificador.
+ *
+ * Entro en acción cuando el usuario selecciona o escribe un identificador
+ * y pulsa el botón para buscar.
+ *
+ * Mi misión es recibir ese dato en el request, consultar el DAO
+ * y devolver una pantalla HTML con el vuelo encontrado.
+ *
+ * Por eso, yo represento muy bien este recorrido:
+ * JSP o formulario -> botón buscar -> Controller -> request -> DAO -> HTML de resultado.
+ */
 @WebServlet(name = "FindVueloController", urlPatterns = { "/findvuelo" })
 public class FindVueloController extends HttpServlet {
     // Logger para registrar mensajes de informacion, advertencia y error
@@ -23,10 +32,16 @@ public class FindVueloController extends HttpServlet {
     // el registro de mensajes.
     private static final Logger logger = LoggerFactory.getLogger(FindVueloController.class);
 
-    // @Inject
     private MongoBean mongoBean;
     private ConexionMongoDb conexionMongoDb;
-
+    /**
+     * Aquí yo preparo la conexión con MongoDB antes de buscar vuelos.
+     *
+     * Sin esa conexión no podría consultar la información necesaria
+     * para enseñar el vuelo solicitado por el usuario.
+     *
+     * @throws ServletException si no consigo dejar preparada la conexión.
+     */
     @Override
     public void init() throws ServletException {
         logger.info("Inicializando FindVueloController");
@@ -37,7 +52,26 @@ public class FindVueloController extends HttpServlet {
             throw new ServletException("No se pudo establecer la conexión con MongoDB");
         }
     }
-
+    /**
+     * Aquí yo proceso la búsqueda de un vuelo por identificador.
+     *
+     * Paso a paso:
+     * 1. Leo del request el identificador que ha enviado el usuario.
+     * 2. Se lo paso al DAO para buscar el vuelo junto con sus datos de aeropuerto.
+     * 3. Si lo encuentro, genero una tabla HTML con la información.
+     * 4. Si no lo encuentro, muestro un mensaje de que no existe.
+     *
+     * De manera sencilla:
+     * el usuario pide un vuelo,
+     * yo recojo la petición,
+     * el DAO busca,
+     * y después yo construyo la página de resultado.
+     *
+     * @param request contiene el identificador del vuelo que el usuario quiere consultar.
+     * @param response me permite devolver la página HTML con el resultado de la búsqueda.
+     * @throws ServletException si ocurre un error interno del servlet.
+     * @throws IOException si ocurre un error al escribir la respuesta.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -108,7 +142,19 @@ public class FindVueloController extends HttpServlet {
         }
         
     }
-
+    /**
+     * Aquí yo dejo preparada una respuesta básica para peticiones POST.
+     *
+     * En la versión actual, la lógica principal de búsqueda del vuelo
+     * está en el método doGet, porque la consulta se hace como navegación normal.
+     *
+     * Este método queda como apoyo o punto de ampliación futura.
+     *
+     * @param request contiene la petición enviada por el navegador.
+     * @param response permite devolver una respuesta simple.
+     * @throws ServletException si ocurre un error interno del servlet.
+     * @throws IOException si ocurre un error de entrada o salida.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

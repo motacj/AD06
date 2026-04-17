@@ -15,6 +15,21 @@ import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import modelo.Pasaje;
 
+/**
+ * Yo soy la clase DAO encargada de hablar con MongoDB para todo lo relacionado
+ * con los pasajes.
+ *
+ * Mi responsabilidad no es mostrar pantallas ni recibir botones,
+ * sino trabajar directamente con la base de datos.
+ *
+ * Dentro del flujo general, yo entro cuando el controller ya ha recibido
+ * los datos del formulario y necesita comprobar o guardar información.
+ *
+ * Dicho de forma fácil:
+ * el usuario pulsa un botón,
+ * el controller recoge los datos del request,
+ * y después me llama a mí para consultar o insertar en la colección "pasaje".
+ */
 public class PasajeDAO {
 
     // Logger para registrar mensajes de informacion, advertencia y error
@@ -25,14 +40,34 @@ public class PasajeDAO {
     private final MongoCollection<Document> collection;
     private final MongoCollection<Document> contadoresCollection;
 
+    /**
+     * Aquí yo recibo la base de datos ya abierta y dejo preparada la colección de
+     * pasajes.
+     *
+     * Gracias a esto, los métodos de esta clase pueden trabajar directamente
+     * contra MongoDB sin tener que volver a crear la conexión cada vez.
+     *
+     * @param database base de datos MongoDB ya inicializada por la capa superior.
+     */
     public PasajeDAO(MongoDatabase database) {
         this.collection = database.getCollection("pasaje");
         this.contadoresCollection = database.getCollection("contadores");
     }
 
-    // Metoddo para convertir un objeto Pasaje a un documento de MongoDB. Este
-    // metodo toma un objeto Pasaje como parametro y crea un nuevo documento de
-    // MongoDB utilizando los atributos del
+    /**
+     * Aquí yo transformo un objeto Pasaje en un Document de MongoDB.
+     *
+     * Este paso es necesario porque el controller y el modelo trabajan con objetos
+     * Java,
+     * pero MongoDB guarda documentos.
+     *
+     * Por tanto, yo hago de traductor:
+     * recibo un Pasaje en formato Java
+     * y lo convierto en el formato que la base de datos entiende.
+     *
+     * @param pasaje objeto Java que contiene los datos del pasaje.
+     * @return documento listo para ser insertado o actualizado en MongoDB.
+     */
     private Document convertirPasajeADocument(Pasaje pasaje) {
         Document document = new Document();
         document.append("idpasaje", pasaje.getIdpasaje())
@@ -58,6 +93,18 @@ public class PasajeDAO {
         return pasaje;
     }
 
+    /**
+     * Aquí yo genero el siguiente identificador numérico del pasaje.
+     *
+     * Antes de insertar un registro nuevo, necesito un id único.
+     * Para conseguirlo, consulto la colección de contadores y aumento
+     * la secuencia correspondiente a "pasaje".
+     *
+     * Dicho de forma sencilla, este método me da el número nuevo
+     * que se va a usar como idpasaje antes de guardar el documento.
+     *
+     * @return el siguiente id disponible para un nuevo pasaje.
+     */
     private int siguienteIdPasaje() {
         Document filtro = new Document("_id", "pasaje");
         Document actualizacion = new Document("$inc", new Document("secuencia", 1));
@@ -94,6 +141,23 @@ public class PasajeDAO {
         }
     }
 
+    /**
+     * Aquí yo inserto en MongoDB un pasaje nuevo.
+     *
+     * Este es el punto donde termina la parte de inserción real.
+     *
+     * Mi trabajo consiste en:
+     * 1. Pedir un nuevo idpasaje.
+     * 2. Asignárselo al objeto Pasaje.
+     * 3. Convertir ese objeto a Document.
+     * 4. Insertarlo en la colección de MongoDB.
+     *
+     * Visto desde arriba, este método representa el final del recorrido:
+     * botón del formulario -> controller -> request -> validación -> DAO ->
+     * inserción definitiva.
+     *
+     * @param pasaje objeto que contiene los datos del nuevo pasaje a guardar.
+     */
     public void insertarPasaje(Pasaje pasaje) {
         try {
             int nuevoId = siguienteIdPasaje();
@@ -262,6 +326,20 @@ public class PasajeDAO {
         }
     }
 
+    /**
+     * Aquí yo compruebo si un asiento ya está ocupado dentro de un vuelo concreto.
+     *
+     * Este control se hace antes de insertar, para evitar que dos pasajes
+     * terminen usando el mismo asiento en el mismo vuelo.
+     *
+     * En el flujo general, el controller me pregunta esto justo después
+     * de leer los datos del formulario y justo antes de intentar guardar.
+     *
+     * @param identificador identificador del vuelo que se quiere comprobar.
+     * @param numasiento    número de asiento que el usuario quiere reservar.
+     * @return true si el asiento ya existe en ese vuelo; false si todavía está
+     *         libre.
+     */
     public boolean existeAsientoEnVuelo(String identificador, int numasiento) {
         try {
             Document query = new Document("identificador", identificador)

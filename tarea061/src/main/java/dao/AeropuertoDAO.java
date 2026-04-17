@@ -9,7 +9,15 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import modelo.Aeropuerto;
-
+/**
+ * Yo soy el DAO encargado de hablar con la colección de aeropuertos en MongoDB.
+ *
+ * No muestro pantallas ni recibo botones del usuario.
+ * Mi trabajo es más interno:
+ * recibir datos desde otras capas,
+ * convertirlos al formato adecuado
+ * y consultar o guardar información en la base de datos.
+ */
 public class AeropuertoDAO {
 
     // Logger para registrar mensajes de informacion, advertencia y error
@@ -18,14 +26,24 @@ public class AeropuertoDAO {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(AeropuertoDAO.class);
 
     private final MongoCollection<Document> collection;
-
+    /**
+     * Aquí yo recibo la base de datos ya abierta y dejo preparada la colección de aeropuertos.
+     *
+     * @param database base de datos MongoDB que voy a utilizar.
+     */
     public AeropuertoDAO(MongoDatabase database) {
         this.collection = ((MongoDatabase) database).getCollection("aeropuerto");
     }
 
-    // Metoddo para convertir un objeto Aeropuerto a un documento de MongoDB. Este
-    // metodo toma un objeto Aeropuerto como parametro y crea un nuevo documento de
-    // MongoDB utilizando los atributos del
+    /**
+     * Aquí yo convierto un objeto Aeropuerto de Java en un Document de MongoDB.
+     *
+     * Dicho de forma sencilla, hago de traductor entre el modelo de la aplicación
+     * y el formato que entiende la base de datos.
+     *
+     * @param aeropuerto objeto Aeropuerto que quiero transformar.
+     * @return documento listo para guardar en MongoDB.
+     */
     private Document convertirAeropuertoADocument(Aeropuerto aeropuerto) {
         Document document = new Document();
         document.append("codaeropuerto", aeropuerto.getCodaeropuerto())
@@ -36,9 +54,15 @@ public class AeropuertoDAO {
         return document;
     }
 
-    // Metodo para convertir un documento de MongoDB a un objeto Aeropuerto. Este
-    // metodo toma un documento de MongoDB como parametro y crea un nuevo objeto
-    // Aeropuerto utilizando los valores del
+    /**
+     * Aquí yo convierto un objeto Aeropuerto de Java en un Document de MongoDB.
+     *
+     * Dicho de forma sencilla, hago de traductor entre el modelo de la aplicación
+     * y el formato que entiende la base de datos.
+     *
+     * @param aeropuerto objeto Aeropuerto que quiero transformar.
+     * @return documento listo para guardar en MongoDB.
+     */
     private Aeropuerto convertirDocumentAAeropuerto(Document document) {
         Aeropuerto aeropuerto = new Aeropuerto();
         aeropuerto.setCodaeropuerto(document.getString("codaeropuerto"));
@@ -68,7 +92,15 @@ public class AeropuertoDAO {
             return false;
         }
     }
-
+    /**
+     * Aquí yo busco un aeropuerto por su nombre.
+     *
+     * Si lo encuentro, convierto el documento en un objeto Aeropuerto
+     * y lo devuelvo a la capa que me lo pidió.
+     *
+     * @param nombre nombre del aeropuerto que quiero buscar.
+     * @return el aeropuerto encontrado, o null si no existe o si ocurre un error.
+     */
     public Aeropuerto buscarAeropuerto(String nombre) {
         try {
             Document query = new Document("nombre", nombre);

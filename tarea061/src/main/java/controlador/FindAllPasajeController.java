@@ -14,7 +14,20 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+/**
+ * Yo soy el controller que muestra el listado completo de pasajes.
+ *
+ * Mi pantalla sirve para que el usuario vea todos los registros
+ * y desde ahí pueda decidir qué quiere hacer con cada uno.
+ *
+ * En esa tabla aparecen botones que permiten modificar o borrar.
+ * Por eso, yo no solo enseño datos, sino que también soy el punto
+ * desde el que nace la navegación hacia otras acciones.
+ *
+ * Mi recorrido mental es este:
+ * Controller -> DAO -> generación HTML del listado
+ * -> usuario pulsa botones -> nuevo Controller o nueva acción.
+ */
 @WebServlet(name = "FindAllPasajeController", urlPatterns = { "/viewallpasajes" })
 public class FindAllPasajeController extends HttpServlet {
     // Logger para registrar mensajes de informacion, advertencia y error
@@ -25,7 +38,14 @@ public class FindAllPasajeController extends HttpServlet {
     // @Inject
     private MongoBean mongoBean;
     private ConexionMongoDb conexionMongoDb;
-
+    /**
+    * Aquí yo preparo la conexión con MongoDB antes de mostrar el listado de pasajes.
+    *
+    * Necesito esa conexión porque el listado se construye con datos reales
+    * que vienen de la colección de pasajes.
+    *
+    * @throws ServletException si no consigo disponer de una conexión válida.
+    */
     @Override
     public void init() throws ServletException {
         logger.info("Inicializando FindVueloController");
@@ -36,7 +56,28 @@ public class FindAllPasajeController extends HttpServlet {
             throw new ServletException("No se pudo establecer la conexión con MongoDB");
         }
     }
-
+    /**
+     * Aquí yo construyo la pantalla que muestra todos los pasajes.
+     *
+     * Este método hace dos trabajos, según lo que llegue en el request:
+     *
+     * - Si el usuario viene con una acción de borrado, primero elimino el pasaje indicado.
+     * - Si no, consulto todos los pasajes y genero la tabla HTML del listado.
+     *
+     * Lo explico de forma sencilla:
+     * 1. Leo del request si hay una acción y un idpasaje.
+     * 2. Si la acción es borrar, llamo al DAO para eliminar el registro.
+     * 3. Si no hay borrado, recupero todos los pasajes.
+     * 4. Pinto la tabla HTML con los botones de modificar y borrar.
+     *
+     * Así, esta pantalla funciona como un punto central:
+     * muestra datos, deja pulsar botones y lanza nuevas peticiones.
+     *
+     * @param request contiene la petición del navegador y, si existe, la acción a realizar.
+     * @param response me permite devolver el HTML del listado o redirigir después de borrar.
+     * @throws ServletException si ocurre un error interno del servlet.
+     * @throws IOException si ocurre un error de entrada o salida.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -134,7 +175,20 @@ public class FindAllPasajeController extends HttpServlet {
         }
 
     }
-
+    /**
+     * Aquí yo respondo a peticiones POST de forma básica.
+     *
+     * En la versión actual de esta clase, este método no desarrolla la lógica principal,
+     * porque el trabajo importante del listado se hace en doGet.
+     *
+     * Aun así, lo dejo como punto preparado por si más adelante
+     * quiero mover aquí alguna acción que venga por POST.
+     *
+     * @param request contiene la petición enviada por el cliente.
+     * @param response permite devolver una respuesta sencilla al navegador.
+     * @throws ServletException si ocurre un error interno del servlet.
+     * @throws IOException si ocurre un error de entrada o salida.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

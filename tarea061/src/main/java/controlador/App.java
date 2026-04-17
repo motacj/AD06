@@ -8,13 +8,32 @@ import com.mongodb.client.MongoDatabase;
 import dao.PasajeDAO;
 import dao.VueloDAO;
 import modelo.Pasaje;
-
-
+/**
+ * Yo soy una clase de prueba manual.
+ *
+ * No actúo como servlet ni como pantalla web.
+ * Mi función es servirme como punto de arranque para probar desde consola
+ * la conexión con MongoDB y varios métodos DAO.
+ *
+ * Gracias a mí puedo comprobar, fuera del flujo web,
+ * si la lógica de inserción, borrado, actualización y consulta funciona bien.
+ */
 public class App {
-
-    // Logger para registrar mensajes de informacion, advertencia y error
-    // relacionados con la conexion a MongoDB. Se utiliza la biblioteca SLF4J para
-    // el registro de mensajes.
+    /**
+     * Aquí yo ejecuto pruebas manuales de la aplicación.
+     *
+     * Dentro de este método hago varias comprobaciones:
+     * 1. Creo la conexión con MongoDB.
+     * 2. Verifico si conecta correctamente.
+     * 3. Muestro información del cluster y de la base de datos.
+     * 4. Pruebo operaciones de pasajes como insertar, borrar y actualizar.
+     * 5. Pruebo consultas de vuelos y pasajes.
+     *
+     * Este método me ayuda a validar la lógica DAO
+     * antes o aparte de usar la interfaz web.
+     *
+     * @param args argumentos de entrada del programa.
+     */
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
     public static void main(String[] args) {

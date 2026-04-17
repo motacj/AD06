@@ -20,6 +20,22 @@ import jakarta.servlet.http.HttpServletResponse;
 import modelo.Pasaje;
 import modelo.Vuelo;
 
+/**
+ * Yo soy el controller encargado del alta de pasajes.
+ *
+ * En mi caso hago dos trabajos distintos:
+ * - si me llaman por GET, yo construyo y muestro el formulario de inserción;
+ * - si me llaman por POST, yo recojo lo que el usuario ha escrito y mando
+ * guardar el pasaje.
+ *
+ * Mi recorrido mental es este:
+ * IndexController -> request -> index.jsp -> botón "Insertar pasaje"
+ * -> InsertPasajeController -> DAO -> generación de HTML o guardado final.
+ *
+ * Lo explico así porque quiero dejar claro que yo soy el puente entre la
+ * pantalla
+ * que ve el usuario y la lógica que termina guardando datos en MongoDB.
+ */
 @WebServlet(name = "InsertPasajeController", urlPatterns = { "/insertpasaje" })
 public class InsertPasajeController extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(InsertPasajeController.class);
@@ -27,6 +43,19 @@ public class InsertPasajeController extends HttpServlet {
     private MongoBean mongoBean;
     private ConexionMongoDb conexionMongoDb;
 
+    /**
+     * Aquí yo preparo la conexión con MongoDB para poder trabajar con los datos del
+     * pasaje.
+     *
+     * Antes de mostrar formularios o guardar información, necesito asegurarme
+     * de que la conexión existe y está lista para usarse.
+     *
+     * Si esta preparación falla, no continúo, porque el alta del pasaje
+     * depende completamente de la base de datos.
+     *
+     * @throws ServletException si no consigo establecer correctamente la conexión
+     *                          con MongoDB.
+     */
     @Override
     public void init() throws ServletException {
         logger.info("Inicializando InsertPasajeController");
@@ -38,6 +67,27 @@ public class InsertPasajeController extends HttpServlet {
         }
     }
 
+    /**
+     * Aquí yo muestro el formulario de inserción de pasajes.
+     *
+     * Cuando el usuario pulsa en index.jsp el botón "Insertar pasaje",
+     * la petición llega a este método por GET.
+     *
+     * Entonces yo hago esto, paso a paso:
+     * 1. Consulto los pasajeros para rellenar el desplegable.
+     * 2. Consulto los vuelos para rellenar el otro desplegable.
+     * 3. Genero el HTML del formulario con out.println(...).
+     * 4. Devuelvo ese HTML al navegador para que el usuario lo vea.
+     *
+     * Es importante entender que en este punto yo no guardo nada todavía.
+     * Aquí solo preparo la pantalla y los botones para que el usuario pueda
+     * escribir los datos.
+     *
+     * @param request  contiene la petición enviada desde el navegador.
+     * @param response permite escribir la página HTML que voy a devolver.
+     * @throws ServletException si ocurre un error interno del servlet.
+     * @throws IOException      si ocurre un error al escribir la respuesta.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -173,6 +223,31 @@ public class InsertPasajeController extends HttpServlet {
         }
     }
 
+    /**
+     * Aquí yo proceso el envío del formulario de inserción.
+     *
+     * Este método entra en acción cuando el usuario ya ha rellenado el formulario
+     * y pulsa el botón "Insertar pasaje".
+     *
+     * Lo que hago es lo siguiente:
+     * 1. Leo del request los valores enviados por el formulario.
+     * 2. Convierto a número los campos que llegan como texto.
+     * 3. Compruebo en el DAO si el asiento ya está ocupado en ese vuelo.
+     * 4. Si está ocupado, genero una página HTML de error para avisar al usuario.
+     * 5. Si está libre, creo el objeto Pasaje y se lo paso al DAO para insertarlo.
+     * 6. Al final redirijo al listado de pasajes.
+     *
+     * En otras palabras, aquí ocurre la parte más importante del flujo:
+     * pulsar botón -> Controller -> request -> DAO -> guardado o error -> respuesta
+     * HTML.
+     *
+     * @param request  contiene los datos que el usuario ha enviado desde el
+     *                 formulario.
+     * @param response permite devolver una página de error o redirigir al listado
+     *                 final.
+     * @throws ServletException si ocurre un error interno del servlet.
+     * @throws IOException      si ocurre un error de entrada o salida.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

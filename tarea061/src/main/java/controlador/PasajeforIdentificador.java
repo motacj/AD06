@@ -14,9 +14,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-
-
+/**
+ * Yo soy el controller que muestra los pasajeros de un vuelo concreto.
+ *
+ * Mi trabajo es recibir el identificador del vuelo que el usuario ha elegido,
+ * pedir al DAO los datos relacionados con ese vuelo
+ * y devolver una tabla HTML con la información de los pasajeros.
+ *
+ * Dicho de forma sencilla:
+ * pantalla principal o formulario -> botón buscar
+ * -> Controller -> request -> DAO -> listado HTML de pasajeros.
+ */
 @WebServlet(name = "PasajeforIdentificador", urlPatterns = { "/findpasaje" })
 public class PasajeforIdentificador extends HttpServlet {
     // Logger para registrar mensajes de informacion, advertencia y error
@@ -24,10 +32,16 @@ public class PasajeforIdentificador extends HttpServlet {
     // el registro de mensajes.
     private static final Logger logger = LoggerFactory.getLogger(PasajeforIdentificador.class);
 
-    // @Inject
     private MongoBean mongoBean;
     private ConexionMongoDb conexionMongoDb;
-
+    /**
+     * Aquí yo preparo la conexión con MongoDB antes de buscar los pasajeros de un vuelo.
+     *
+     * Necesito esa conexión para poder consultar los datos del pasaje
+     * y también los datos relacionados del pasajero.
+     *
+     * @throws ServletException si no consigo dejar lista la conexión.
+     */
     @Override
     public void init() throws ServletException {
         logger.info("Inicializando FindVueloController");
@@ -38,7 +52,23 @@ public class PasajeforIdentificador extends HttpServlet {
             throw new ServletException("No se pudo establecer la conexión con MongoDB");
         }
     }
-
+    /**
+     * Aquí yo construyo el listado de pasajeros asociados a un identificador de vuelo.
+     *
+     * Lo que hago es:
+     * 1. Leo del request el identificador del vuelo.
+     * 2. Llamo al DAO para obtener los datos completos del pasaje y del pasajero.
+     * 3. Genero una tabla HTML con la información resultante.
+     * 4. Devuelvo esa página al navegador.
+     *
+     * Yo no modifico nada en la base de datos.
+     * Mi misión aquí es solo consultar y mostrar.
+     *
+     * @param request contiene el identificador del vuelo enviado por el usuario.
+     * @param response me permite devolver la página HTML con los pasajeros encontrados.
+     * @throws ServletException si ocurre un error interno del servlet.
+     * @throws IOException si ocurre un error al escribir la respuesta.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -101,14 +131,6 @@ public class PasajeforIdentificador extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al procesar la solicitud");
         }
         
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        response.setContentType("text/html;charset=UTF-8");
-        response.getWriter().println("POST /personas funcionando");
     }
 
 }
