@@ -43,4 +43,23 @@ public class PasajeroDAO {
 
         return codigos;
     }
+
+    public List<Document> obtenerTodosPasajeros() {
+        List<Document> pasajeros = new ArrayList<>();
+
+        try {
+            for (Document doc : collection.find()) {
+                pasajeros.add(doc);
+            }
+
+            logger.info("Se obtuvieron {} pasajeros.", pasajeros.size());
+
+        } catch (MongoException e) {
+            logger.error("Error al obtener pasajeros: {}", e.getMessage());
+        }
+
+        return pasajeros;
+    }
+
+    
 }

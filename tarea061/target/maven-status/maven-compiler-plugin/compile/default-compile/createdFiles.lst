@@ -13,6 +13,7 @@ controlador\FindVueloController.class
 dao\VueloDAO.class
 modelo\Vuelo.class
 controlador\AeropuertoController.class
+controlador\InsertPasajeController.class
 dao\PasajeDAO.class
 dao\PasajeroDAO.class
 controlador\ConexionMongoDb.class

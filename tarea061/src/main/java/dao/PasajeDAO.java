@@ -262,4 +262,23 @@ public class PasajeDAO {
         }
     }
 
+    public boolean existeAsientoEnVuelo(String identificador, int numasiento) {
+        try {
+            Document query = new Document("identificador", identificador)
+                    .append("numasiento", numasiento);
+
+            Document result = this.collection.find(query).first();
+
+            if (result != null) {
+                logger.warn("El asiento {} ya está ocupado en el vuelo {}", numasiento, identificador);
+                return true;
+            }
+
+            return false;
+
+        } catch (MongoException e) {
+            logger.error("Error al comprobar asiento en vuelo: {}", e.getMessage());
+            return false;
+        }
+    }
 }
