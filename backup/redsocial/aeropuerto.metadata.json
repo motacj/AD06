@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"codaeropuerto":{"$numberInt":"1"}},"name":"codaeropuerto_1","unique":true}],"uuid":"a7d4c112b3004c6ab231dbf7de76bd0e","collectionName":"aeropuerto","type":"collection"}

@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"pasajerocod":{"$numberInt":"1"}},"name":"pasajerocod_1","unique":true}],"uuid":"d2229ff5922949ccb0e88ad605baa4f6","collectionName":"pasajero","type":"collection"}
